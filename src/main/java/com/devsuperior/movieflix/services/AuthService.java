@@ -26,11 +26,18 @@ public class AuthService {
 		}
 	}
 	
-	public void validateSelfOrMember(Long userId) throws Exception {
+	public void validateVisitorOrMember(Long userId) throws Exception {
 		User user = authenticated();
+		if(!user.getId().equals(userId) && !user.hasRole("ROLE_MEMBER")) {
+			throw new Exception("not member");
+		}
+	}
+	
+//	public void validateSelfOrMember(Long userId) throws Exception {
+//		User user = authenticated();
 //		if (!user.getId().equals(userId) && !user.hasRole("ROLE_MEMBER")) {
 //			throw
 //		}
-	}
+//	}
 	
 }

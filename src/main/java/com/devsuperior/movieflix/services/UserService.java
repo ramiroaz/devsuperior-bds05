@@ -1,11 +1,13 @@
 package com.devsuperior.movieflix.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -33,22 +35,27 @@ public class UserService implements UserDetailsService {
 		return list.stream().map(x -> new UserDTO(x)).collect(Collectors.toList());
 	}
 	
-//	@Transactional(readOnly = true)
-//	public UserDTO findById(Long id) {
-//		Optional<User> obj = repository.findById(id);
-//		User entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entidade não encontrada"));
-//		return new UserDTO(entity);
-//	}
+	@Transactional(readOnly = true)
+	public UserDTO findById(Long id) {
+		Optional<User> obj = repository.findById(id);
+		User entity = obj.orElseThrow();  //??? Ramiro
+		return new UserDTO(entity);
+	}
+	
+	@Transactional(readOnly = true)
+	public UserDTO findByEmail(String email) {
+		User obj = repository.findByEmail(email);
+		return new UserDTO(obj);
+	}	
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		// retorna os dados do user, dado um e-mail (email no caso é username
 		User user = repository.findByEmail(username);
-		if (user == null ) {
-			logger.error("Usuário não encontrado :" + username);
-			throw new UsernameNotFoundException("E-mail não encontrado");
-		}
-		logger.info("Usuário encontrado : " + username);
+		if (user == null) {
+			logger.error("Usuário não encontrado: " + username);
+			throw new UsernameNotFoundException("Email não encontrado");
+		} 
+		logger.info("Usuário não encontrado: " + username);
 		return user;
 	}
 	
