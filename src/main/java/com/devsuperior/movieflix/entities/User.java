@@ -9,7 +9,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -28,135 +27,132 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Entity
 @Table(name = "tb_user")
 public class User implements UserDetails, Serializable {
-	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	private String name;
-	@Column(unique = true)
-	private String email;
-	private String password;
-	
-	@ManyToMany(fetch = FetchType.EAGER)		//na consulta de um usuário, obriga a trazer seus roles
-	@JoinTable(name = "tb_user_role",
-			   joinColumns = @JoinColumn(name = "user_id"),
-			   inverseJoinColumns = @JoinColumn(name = "role_id")
-			  )
-	private Set<Role> roles = new HashSet<>(); 
-	
-	@OneToMany(mappedBy = "user")
-	private List<Review> reviews = new ArrayList<>();
-	
-	public User() {
-	}
+  private static final long serialVersionUID = 1L;
 
-	public User(Long id, String email, String password, String name) {
-		super();
-		this.id = id;
-		this.email = email;
-		this.password = password;
-		this.name = name;
-	}
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+  private String name;
+  private String email;
+  private String password;
 
-	
-	public List<Review> getReviews() {
-		return reviews;
-	}
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JoinTable(name = "tb_user_role",
+      joinColumns = @JoinColumn(name = "user_id"),
+      inverseJoinColumns = @JoinColumn(name = "role_id"))
+  private Set<Role> roles = new HashSet<>();
 
-	public String getName() {
-		return name;
-	}
+  @OneToMany(mappedBy = "user")
+  private List<Review> reviews = new ArrayList<>();
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public User() {
+  }
 
-	public Long getId() {
-		return id;
-	}
+  public User(final Long id, final String name, final String email, final String password) {
+    this.id = id;
+    this.name = name;
+    this.email = email;
+    this.password = password;
+  }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+  public Long getId() {
+    return id;
+  }
 
-	public String getEmail() {
-		return email;
-	}
+  public void setId(final Long id) {
+    this.id = id;
+  }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public String getPassword() {
-		return password;
-	}
+  public void setName(final String name) {
+    this.name = name;
+  }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+  public String getEmail() {
+    return email;
+  }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
+  public void setEmail(final String email) {
+    this.email = email;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		User other = (User) obj;
-		return Objects.equals(id, other.id);
-	}
-
-	public Set<Role> getRoles() {
-		return roles;
-	}
-
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// converte os ROLES do user no tipo GranteAuthority
-		return roles.stream().map(role -> new SimpleGrantedAuthority(role.getAuthority()))
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+	  return roles.stream().map(role -> new SimpleGrantedAuthority(role.getAuthority()))
 				.collect(Collectors.toList());
-	}
+  }
 
-	@Override
-	public String getUsername() {
-		return email;  
-	}
+  public String getPassword() {
+    return password;
+  }
 
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;  //por enquanto
-	}
+  @Override
+  public String getUsername() {
+    return email;
+  }
 
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;  //por enquanto
-	}
+  @Override
+  public boolean isAccountNonExpired() {
+    return true;
+  }
 
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;  //por enquanto
-	}
+  @Override
+  public boolean isAccountNonLocked() {
+    return true;
+  }
 
-	@Override
-	public boolean isEnabled() {
-		return true;  //por enquanto
-	}
-	
-	//retorna verdade se o usuário possui o role informado
-	public boolean hasRole(String roleName) {
-		for (Role role : roles) {
-			if (role.getAuthority().equals(roleName)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return true;
+  }
+
+  public void setPassword(final String password) {
+    this.password = password;
+  }
+
+  public Set<Role> getRoles() {
+    return roles;
+  }
+
+  public void setRoles(final Set<Role> roles) {
+    this.roles = roles;
+  }
+
+  public List<Review> getReviews() {
+    return reviews;
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    final User user = (User) o;
+    return Objects.equals(id, user.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
+
+  public boolean hasRole(String roleName) {
+    for (Role role : roles) {
+      if (role.getAuthority().equals(roleName)) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

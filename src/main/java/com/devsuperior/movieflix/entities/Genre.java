@@ -1,5 +1,6 @@
 package com.devsuperior.movieflix.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -13,62 +14,59 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "tb_genre")
-public class Genre {
+public class Genre implements Serializable {
+  private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	private String name;
-	
-	@OneToMany(mappedBy = "genre")
-	private List<Movie> movies = new ArrayList<>();
-	
-	public Genre() {
-	}
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+  private String name;
 
-	public Genre(Long id, String name) {
-		super();
-		this.id = id;
-		this.name = name;
-	}
+  @OneToMany(mappedBy = "genre")
+  private List<Movie> movies = new ArrayList<>();
 
-	public Long getId() {
-		return id;
-	}
+  public Genre() {
+  }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+  public Genre(final Long id, final String name) {
+    this.id = id;
+    this.name = name;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public Long getId() {
+    return id;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public void setId(final Long id) {
+    this.id = id;
+  }
 
-	
-	public List<Movie> getMovies() {
-		return movies;
-	}
+  public String getName() {
+    return name;
+  }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
+  public void setName(final String name) {
+    this.name = name;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Genre other = (Genre) obj;
-		return Objects.equals(id, other.id);
-	}
-	
-	
+  public List<Movie> getMovies() {
+    return movies;
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    final Genre genre = (Genre) o;
+    return Objects.equals(id, genre.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
 }

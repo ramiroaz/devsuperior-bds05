@@ -1,5 +1,6 @@
 package com.devsuperior.movieflix.entities;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import javax.persistence.Entity;
@@ -9,83 +10,81 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "tb_review")
-public class Review {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	private String text;
-	
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user;
-	
-	@ManyToOne
-	@JoinColumn(name = "movie_id")
-	private Movie movie;
-	
-	
-	public Review() {
-	}
+public class Review implements Serializable {
+  private static final long serialVersionUID = 1L;
 
-	public Review(Long id, String text) {
-		super();
-		this.id = id;
-		this.text = text;
-	}
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+  @NotEmpty(message = "Campo Obrigatório")
+  private String text;
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+  @ManyToOne
+  @JoinColumn(name = "movie_id")
+  private Movie movie;
 
-	public User getUser() {
-		return user;
-	}
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private User user;
 
-	public Long getId() {
-		return id;
-	}
+  public Review() {
+  }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+  public Review(final Long id, final String text) {
+    this.id = id;
+    this.text = text;
+  }
 
-	public String getText() {
-		return text;
-	}
+  public Long getId() {
+    return id;
+  }
 
-	public void setText(String text) {
-		this.text = text;
-	}
+  public void setId(final Long id) {
+    this.id = id;
+  }
 
-	
-	public Movie getMovie() {
-		return movie;
-	}
+  public String getText() {
+    return text;
+  }
 
-	public void setMovie(Movie movie) {
-		this.movie = movie;
-	}
+  public void setText(final String text) {
+    this.text = text;
+  }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
+  public Movie getMovie() {
+    return movie;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Review other = (Review) obj;
-		return Objects.equals(id, other.id);
-	}
-	
-	
+  public void setMovie(final Movie movie) {
+    this.movie = movie;
+  }
+
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(final User user) {
+    this.user = user;
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    final Review review = (Review) o;
+    return Objects.equals(id, review.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
 }

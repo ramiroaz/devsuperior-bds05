@@ -1,5 +1,6 @@
 package com.devsuperior.movieflix.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -15,114 +16,111 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "tb_movie")
-public class Movie  {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
-	private String title;
-	private String subTitle;
-	private Integer year;
-	private String imgUrl;
-	private String synopsis;
-	
-	@OneToMany(mappedBy = "movie")
-	private List<Review> reviews = new ArrayList<>();
-	
-	@ManyToOne
-	@JoinColumn(name = "genre_id")
-	private Genre genre;
-	
-	public Movie() {
-	}
+public class Movie implements Serializable {
+  private static final long serialVersionUID = 1L;
 
-	public Movie(long id, String title, String subTitle, Integer year, String imgUrl, String synopsis) {
-		super();
-		this.id = id;
-		this.title = title;
-		this.subTitle = subTitle;
-		this.year = year;
-		this.imgUrl = imgUrl;
-		this.synopsis = synopsis;
-	}
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+  private String title;
+  private String subTitle;
+  private Integer year;
+  private String imgUrl;
+  private String synopsis;
 
-	public long getId() {
-		return id;
-	}
+  @ManyToOne
+  @JoinColumn(name = "genre_id")
+  private Genre genre;
 
-	public void setId(long id) {
-		this.id = id;
-	}
+  @OneToMany(mappedBy = "movie")
+  private List<Review> reviews = new ArrayList<>();
 
-	public String getTitle() {
-		return title;
-	}
+  public Movie() {
+  }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  public Movie(final Long id, final String title, final String subTitle, final Integer year, final String imgUrl, final String synopsis) {
+    this.id = id;
+    this.title = title;
+    this.subTitle = subTitle;
+    this.year = year;
+    this.imgUrl = imgUrl;
+    this.synopsis = synopsis;
+  }
 
-	public String getSubTitle() {
-		return subTitle;
-	}
+  public Long getId() {
+    return id;
+  }
 
-	public void setSubTitle(String subTitle) {
-		this.subTitle = subTitle;
-	}
+  public void setId(final Long id) {
+    this.id = id;
+  }
 
-	public Integer getYear() {
-		return year;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public void setYear(Integer year) {
-		this.year = year;
-	}
+  public void setTitle(final String title) {
+    this.title = title;
+  }
 
-	public String getImgUrl() {
-		return imgUrl;
-	}
+  public String getSubTitle() {
+    return subTitle;
+  }
 
-	public void setImgUrl(String imgUrl) {
-		this.imgUrl = imgUrl;
-	}
+  public void setSubTitle(final String subTitle) {
+    this.subTitle = subTitle;
+  }
 
-	public String getSynopsis() {
-		return synopsis;
-	}
+  public Integer getYear() {
+    return year;
+  }
 
-	public void setSynopsis(String synopsis) {
-		this.synopsis = synopsis;
-	}
+  public void setYear(final Integer year) {
+    this.year = year;
+  }
 
-	public Genre getGenre() {
-		return genre;
-	}
+  public String getImgUrl() {
+    return imgUrl;
+  }
 
-	public void setGenre(Genre genre) {
-		this.genre = genre;
-	}
+  public void setImgUrl(final String imgUrl) {
+    this.imgUrl = imgUrl;
+  }
 
-	
-	public List<Review> getReviews() {
-		return reviews;
-	}
+  public String getSynopsis() {
+    return synopsis;
+  }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
+  public void setSynopsis(final String synopsis) {
+    this.synopsis = synopsis;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Movie other = (Movie) obj;
-		return id == other.id;
-	}
-	
-	
+  public Genre getGenre() {
+    return genre;
+  }
+
+  public void setGenre(final Genre genre) {
+    this.genre = genre;
+  }
+
+  public List<Review> getReviews() {
+    return reviews;
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    final Movie movie = (Movie) o;
+    return Objects.equals(id, movie.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
 }

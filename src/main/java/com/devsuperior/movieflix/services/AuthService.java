@@ -7,37 +7,27 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.devsuperior.movieflix.entities.User;
 import com.devsuperior.movieflix.repositories.UserRepository;
+import com.devsuperior.movieflix.services.exceptions.UnauthorizedException;
 
 @Service
 public class AuthService {
 
-	@Autowired
-	private UserRepository userRepository;
-	
-	@Transactional(readOnly = true)
-	public User authenticated() throws Exception {
-		try { 
-		//pega o usuário já autenticado pelo Spring Security
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		return userRepository.findByEmail(username);
-		} 
-		catch (Exception e) {
-			throw new Exception();
-		}
-	}
-	
-	public void validateVisitorOrMember(Long userId) throws Exception {
-		User user = authenticated();
-		if(!user.getId().equals(userId) && !user.hasRole("ROLE_MEMBER")) {
-			throw new Exception("not member");
-		}
-	}
-	
-//	public void validateSelfOrMember(Long userId) throws Exception {
-//		User user = authenticated();
-//		if (!user.getId().equals(userId) && !user.hasRole("ROLE_MEMBER")) {
-//			throw
-//		}
-//	}
-	
+  @Autowired
+  private UserRepository userRepository;
+
+  @Transactional(readOnly = true)
+  public User authenticated() {
+    try {
+      String username = SecurityContextHolder
+          .getContext()
+          .getAuthentication()
+          .getName();
+      return userRepository.findByEmail(username);
+    }
+    catch (Exception e) {
+      throw new UnauthorizedException("Invalid user");
+    }
+  }
+
+
 }
